@@ -122,7 +122,7 @@ class Script(object):
 def main(args):
     print('main start')
 
-    scp = [['host', 'http://www.tetewx.com/'],
+    scp = [['host', 'http://www.wx.com/'],
            # ['open', 'all/'],
            # ['getlist', 'div.novellist ul li a'],
            ['open', 'index/1-1.html'],
