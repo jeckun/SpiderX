@@ -39,7 +39,7 @@ script = {
         '_introduction': bookInf['introduction'],
     },
     'getImg': {
-        '_cover', bookInf['cover'],
+        '_cover': bookInf['cover'],
     },
     'getHref': {
         '_catalog': 'body > div.Main > div.bLeft > div.BookInfo > div.Props > dl > dt > a',

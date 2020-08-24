@@ -52,6 +52,13 @@ class Spider(object):
         else:
             return ''
 
+    def getImgSrc(self, page, point):
+        if point:
+            doc = page.content.select(point)
+            return doc[0]['src']
+        else:
+            return ''
+
     def getHref(self, page, point):
         if point:
             doc = page.content.select(point)
@@ -84,12 +91,27 @@ class Page(object):
         self.spider.load(self)
 
     def save(self, name, content):
+
+        path = os.path.join(BASE_DIR, self._title)
+        if not os.path.isdir(path):
+            os.makedirs(path)
+        os.chdir(path)
+
         print('保存文件:', name)
-        with open(name+'.txt', 'w') as file:
-            file.write(content)
+        if name[len(name)-4: len(name)] == '.txt':
+            with open(name+'.txt', 'w') as file:
+                file.write(content)
+        elif name[len(name)-4: len(name)] == '.jpg':
+            with open(name, 'wb') as file:
+                file.write(content)
 
     def getText(self, point):
         return self.spider.getText(self, point)
+
+    def getImg(self, point):
+        url = self.getfullpath(self.spider.getImgSrc(self, point))
+        re = requests.get(url, headers=self.spider._headers, timeout=5)
+        self.save('Logo.jpg', re.content)
 
     def getHref(self, point):
         return self.getfullpath(self.spider.getHref(self, point))
@@ -131,16 +153,15 @@ class Books(Page):
         for item in baseinf:
             setattr(self, item, self.getText(baseinf[item]))
 
+    def getCover(self, point):
+        self.getImg(point)
+
     def getCatalog(self):
         self.load(self._catalog)
         self._author = self.getText(self._bookinf['author'])
         self._catalog_list = self.getCatalogList(self._bookinf['catalog_list'])
 
     def getChapter(self, point):
-        path = os.path.join(BASE_DIR, self._title)
-        if not os.path.isdir(path):
-            os.makedirs(path)
-        os.chdir(path)
 
         print('开始下载章节')
         for name, path in self._catalog_list:
@@ -150,7 +171,7 @@ class Books(Page):
             else:
                 try:
                     self.load(path)
-                    self.save(name, self.getText(point))
+                    self.save(name+'.txt', self.getText(point))
                 except Exception as e:
                     print(e)
                     continue
@@ -175,7 +196,7 @@ class Script(object):
             elif i == 'getText':
                 self._page.getbaseinf(dicts[i])
             elif i == 'getImg':
-                pass
+                self._page.getCover(dicts[i]['_cover'])
             elif i == 'getHref':
                 self._page.getCatalogHref(dicts[i]['_catalog'])
             elif i == 'openCatalog':
