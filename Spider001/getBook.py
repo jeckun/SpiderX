@@ -12,15 +12,16 @@ Script: 代表的是解析自定义脚本
 """
 
 import os
+import random
 import re
 import sys
 import time
-import random
+from urllib.parse import urlparse
+
 import requests
 from bs4 import BeautifulSoup as bs
-from requests.adapters import HTTPAdapter
-from urllib.parse import urlparse
 from config import header, bookInf, script
+from requests.adapters import HTTPAdapter
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -98,10 +99,10 @@ class Page(object):
         os.chdir(path)
 
         print('保存文件:', name)
-        if name[len(name)-4: len(name)] == '.txt':
-            with open(name+'.txt', 'w') as file:
+        if name[len(name) - 4: len(name)] == '.txt':
+            with open(name, 'w') as file:
                 file.write(content)
-        elif name[len(name)-4: len(name)] == '.jpg':
+        elif name[len(name) - 4: len(name)] == '.jpg':
             with open(name, 'wb') as file:
                 file.write(content)
 
@@ -136,9 +137,9 @@ class Books(Page):
     _time = ''
     _state = ''
     _number = ''
-    _introduction = ''   # 介绍
-    _cover = ''   # 封面
-    _catalog = ''   # 目录
+    _introduction = ''  # 介绍
+    _cover = ''  # 封面
+    _catalog = ''  # 目录
     _catalog_list = None
     _bookinf = None
 
@@ -165,13 +166,13 @@ class Books(Page):
 
         print('开始下载章节')
         for name, path in self._catalog_list:
-            if os.path.isfile(name+'.txt'):
+            if os.path.isfile(name + '.txt'):
                 print('已经下载: %s' % name)
                 continue
             else:
                 try:
                     self.load(path)
-                    self.save(name+'.txt', self.getText(point))
+                    self.save(name + '.txt', self.getText(point))
                 except Exception as e:
                     print(e)
                     continue

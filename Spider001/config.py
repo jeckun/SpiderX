@@ -1,4 +1,3 @@
-
 header = {
     'authority': 'www.cnblogs.com',
     'pragma': 'no-cache',
@@ -15,17 +14,17 @@ header = {
 }
 
 bookInf = {
-        'url': 'https://www.17k.com/book/2389507.html',
-        'title': 'body > div.Main > div.bLeft > div.BookInfo > div.Info.Sign > h1 > a',
-        'author': 'body > div.Main.List > div.Author > a',
-        'time': '#bookInfo > dt > em',
-        'state': 'body > div.Main > div.bLeft > div.BookInfo > div.Info.Sign > div.label > a:nth-child(1) > span',
-        'number': 'body > div.Main > div.bLeft > div.BookInfo > div.Info.Sign > div.BookData > p:nth-child(3) > em',
-        'introduction': '#bookInfo > dd > div:nth-child(1) > p > a',
-        'cover': '#bookCover > a > img',
-        'catalog': 'body > div.Main > div.bLeft > div.BookInfo > div.Props > dl > dt > a',
-        'catalog_list': 'body > div.Main.List > dl:nth-child(5) > dd > a',
-        'chapter': '#readArea > div.readAreaBox.content',
+    'url': 'https://www.17k.com/book/2389507.html',
+    'title': 'body > div.Main > div.bLeft > div.BookInfo > div.Info.Sign > h1 > a',
+    'author': 'body > div.Main.List > div.Author > a',
+    'time': '#bookInfo > dt > em',
+    'state': 'body > div.Main > div.bLeft > div.BookInfo > div.Info.Sign > div.label > a:nth-child(1) > span',
+    'number': 'body > div.Main > div.bLeft > div.BookInfo > div.Info.Sign > div.BookData > p:nth-child(3) > em',
+    'introduction': '#bookInfo > dd > div:nth-child(1) > p > a',
+    'cover': '#bookCover > a > img',
+    'catalog': 'body > div.Main > div.bLeft > div.BookInfo > div.Props > dl > dt > a',
+    'catalog_list': 'body > div.Main.List > dl:nth-child(5) > dd > a',
+    'chapter': '#readArea > div.readAreaBox.content',
 }
 
 script = {
