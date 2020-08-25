@@ -20,10 +20,8 @@ from urllib.parse import urlparse
 
 import requests
 from bs4 import BeautifulSoup as bs
-from config import header, bookInf, script
+from Spider001.config import header, bookInf, script, BASE_DIR
 from requests.adapters import HTTPAdapter
-
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 class Spider(object):
@@ -43,7 +41,7 @@ class Spider(object):
             time.sleep(random.randint(1, 10))
             return True
         except requests.exceptions.ConnectionError as e:
-            print('连接失败，请检查网络或者因访问过于频繁被屏蔽了...')
+            print('连接失败，请检查网络或者因访问过于频繁被屏蔽了...', e)
             return False
 
     def getText(self, page, point):
@@ -72,6 +70,7 @@ class Spider(object):
 
 class Page(object):
     _hostname = ''
+    _title = ''
     _url = ''
     content = None
     spider = None
@@ -130,7 +129,7 @@ class Page(object):
 
 
 class Books(Page):
-    _title = ''
+    # _title = ''
     _author = ''
     _time = ''
     _state = ''
