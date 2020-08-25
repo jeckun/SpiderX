@@ -35,26 +35,27 @@ class Spider(object):
 
     def load(self, page):
         try:
-            # 检查网页的地址是否正确
-            if not page._url:
-                raise ValueError("网址不能为空！")
-            self._urlparse = urlparse(page._url)
-            if not self._urlparse:
-                raise ValueError("网址不合规!")
-            else:
-                page._scheme = self._urlparse.scheme
-                page._host = self._urlparse.netloc
-                page._path = self._urlparse.path
-            # 打开网页
-            # response = self._session.get(page._url, headers=self._headers, timeout=5)
+            # 打开网页获取BS解析后的内容
             page.content = bs(self.get_page_content(page._url), "lxml")
-            # time.sleep(random.randint(1, 10))
+
+            # 同步Page的网址信息
+            page._scheme = self._urlparse.scheme
+            page._host = self._urlparse.netloc
+            page._path = self._urlparse.path
+
             return True
         except requests.exceptions.ConnectionError as e:
             print('连接失败...', e)
             return False
 
     def get_page_content(self, url):
+        # 检查网页的地址是否正确
+        if not url:
+            raise ValueError("网址不能为空！")
+        self._urlparse = urlparse(url)
+        if not self._urlparse:
+            raise ValueError("网址不合规!")
+
         # 打开网页
         response = self._session.get(url, headers=self._headers, timeout=5)
         time.sleep(random.randint(1, 10))
@@ -83,11 +84,11 @@ class Spider(object):
         return [[l.text.replace('\r', '').replace('\n', '').replace('\t', ''),
                  l['href'][1:]] for l in page.content.select(point)]
 
-    def get_full_path(self, path):
+    def get_full_path(self, page, path):
         if not url_verification(path):
             if start_with(r'//', path):
-                return self._urlparse.scheme + ':' + path
+                return page._scheme + ':' + path
             elif start_with(r'/', path):
-                return self._urlparse.scheme + '://' + self._urlparse.netloc + path
+                return page._scheme + '://' + page._host + path
             else:
-                return self._urlparse.scheme + '://' + self._urlparse.netloc + '/' + path
+                return page._scheme + '://' + page._host + '/' + path

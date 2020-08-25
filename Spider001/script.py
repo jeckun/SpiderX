@@ -26,15 +26,15 @@ class Script(object):
             if i == 'openHome':
                 self._page.load(dicts[i])
             elif i == 'getText':
-                self._page.getbaseinf(dicts[i])
+                self._page.get_base_inf(dicts[i])
             elif i == 'getImg':
-                self._page.getCover(dicts[i]['_cover'])
+                self._page.get_cover(dicts[i]['_cover'])
             elif i == 'getHref':
-                self._page.getCatalogHref(dicts[i]['_catalog'])
+                self._page.get_catalog_href(dicts[i]['_catalog'])
             elif i == 'openCatalog':
-                self._page.getCatalog()
+                self._page.get_catalog()
             elif i == 'getChapter':
-                self._page.getChapter(dicts[i])
+                self._page.get_chapter(dicts[i])
             else:
                 pass
         return

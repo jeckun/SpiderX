@@ -54,19 +54,18 @@ class Page(object):
         return self.spider.get_a_text(self, point)
 
     def get_img(self, point):
-        url = self.spider.get_full_path(self.spider.get_img_src(self, point))
+        url = self.spider.get_full_path(self, self.spider.get_img_src(self, point))
         self.save('logo.jpg', self.spider.get_page_content(url))
 
     def get_href(self, point):
-        return self.spider.get_full_path(self.spider.get_a_href(self, point))
+        return self.spider.get_full_path(self, self.spider.get_a_href(self, point))
 
     def get_catalog_list(self, point):
-        l = self.spider.get_page_list(self, point)
-        return [[name, self.spider.get_full_path(url)] for name, url in l]
+        lst = self.spider.get_page_list(self, point)
+        return [[name, self.spider.get_full_path(self, url)] for name, url in lst]
 
 
 class Books(Page):
-    # _title = ''
     _author = ''
     _time = ''
     _state = ''
@@ -75,32 +74,32 @@ class Books(Page):
     _cover = ''  # 封面
     _catalog = ''  # 目录
     _catalog_list = None
-    _bookinf = None
+    _book_inf = None
 
     def __init__(self, spider, inf=None):
         if not inf:
-            self._bookinf = bookInf
+            self._book_inf = bookInf
         else:
-            self._bookinf = inf
+            self._book_inf = inf
         self.spider = spider
-        # super().__init__(spider, self._bookinf['url'])
+        super().__init__(spider, self._book_inf['url'])
 
-    def getCatalogHref(self, point):
+    def get_catalog_href(self, point):
         self._catalog = self.get_href(point)
 
-    def getbaseinf(self, baseinf):
-        for item in baseinf:
-            setattr(self, item, self.get_text(baseinf[item]))
+    def get_base_inf(self, base_inf):
+        for item in base_inf:
+            setattr(self, item, self.get_text(base_inf[item]))
 
-    def getCover(self, point):
+    def get_cover(self, point):
         self.get_img(point)
 
-    def getCatalog(self):
+    def get_catalog(self):
         self.load(self._catalog)
-        self._author = self.get_text(self._bookinf['author'])
-        self._catalog_list = self.get_catalog_list(self._bookinf['catalog_list'])
+        self._author = self.get_text(self._book_inf['author'])
+        self._catalog_list = self.get_catalog_list(self._book_inf['catalog_list'])
 
-    def getChapter(self, point):
+    def get_chapter(self, point):
 
         print('开始下载章节')
         for name, path in self._catalog_list:
