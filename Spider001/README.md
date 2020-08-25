@@ -26,7 +26,7 @@
 
 5. 运行脚本
 
-   $ python getBook.py
+   $ python manager.py
 
 ## 遗留问题
 
