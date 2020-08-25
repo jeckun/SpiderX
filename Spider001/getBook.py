@@ -50,8 +50,6 @@ class Spider(object):
         if point:
             doc = page.content.select(point)
             return doc[0].text
-        else:
-            return ''
 
     def getImgSrc(self, page, point):
         if point:
