@@ -9,69 +9,60 @@ webpage: 用于代表网页的元素和对网页的基本操作。
 例如获取网页上的某个信息，或者列表。下载图片文件，打开链接等。
 """
 import os
-import re
-import requests
-from urllib.parse import urlparse
-from Spider001.config import BASE_DIR
+
+from Spider001.config import bookInf, BASE_DIR
+from lib.public import file_extension
 
 
 class Page(object):
-    _hostname = ''
-    _title = ''
-    _url = ''
-    content = None
-    spider = None
+    _host = ''  # 网站主机域名
+    _scheme = ''  # 链接协议
+    _path = ''  # 网页所在路径
+    _title = ''  # 网站主题或者图书的标题
+    _url = ''  # 具体网址
+    content = None  # 网址内容
+    spider = None  # 关联爬虫
 
-    def __init__(self, href, spider):
+    def __init__(self, spider, href):
         self._url = href
-        self._hostname = urlparse(self._url).hostname
         self.spider = spider
 
     def __str__(self):
-        return self._hostname
+        return self._host
 
     def load(self, url=''):
         if url:
             self._url = url
         self.spider.load(self)
 
-    def save(self, name, content):
+    def save(self, filename, content):
+        # 保存内容之前先检查本地是否有缓存的目录
         path = os.path.join(BASE_DIR, self._title)
         if not os.path.isdir(path):
             os.makedirs(path)
         os.chdir(path)
 
-        print('保存文件:', name)
-        if name[len(name) - 4: len(name)] == '.txt':
-            with open(name, 'w') as file:
+        print('保存文件:', filename)
+        if file_extension(filename) == '.txt':
+            with open(filename, 'w') as file:
                 file.write(content)
-        elif name[len(name) - 4: len(name)] == '.jpg':
-            with open(name, 'wb') as file:
+        elif file_extension(filename) == '.jpg':
+            with open(filename, 'wb') as file:
                 file.write(content)
 
-    def getText(self, point):
+    def get_text(self, point):
         return self.spider.get_a_text(self, point)
 
-    def getImg(self, point):
-        url = self.getfullpath(self.spider.get_img_src(self, point))
-        re = requests.get(url, headers=self.spider._headers, timeout=5)
-        self.save('Logo.jpg', re.content)
+    def get_img(self, point):
+        url = self.spider.get_full_path(self.spider.get_img_src(self, point))
+        self.save('logo.jpg', self.spider.get_page_content(url))
 
-    def getHref(self, point):
-        return self.getfullpath(self.spider.get_a_href(self, point))
+    def get_href(self, point):
+        return self.spider.get_full_path(self.spider.get_a_href(self, point))
 
-    def getCatalogList(self, point):
+    def get_catalog_list(self, point):
         l = self.spider.get_page_list(self, point)
-        return [[name, self.getfullpath(url)] for name, url in l]
-
-    def getfullpath(self, path):
-        if not re.match(r'^http\w*', path):
-            if re.match(r'^//\w*', path):
-                return 'http:' + path
-            elif re.match(r'^/\w*', path):
-                return 'http://' + self._hostname + path
-            else:
-                return 'http://' + self._hostname + '/' + path
+        return [[name, self.spider.get_full_path(url)] for name, url in l]
 
 
 class Books(Page):
@@ -86,24 +77,28 @@ class Books(Page):
     _catalog_list = None
     _bookinf = None
 
-    def __init__(self, inf, spider):
-        super().__init__(inf['url'], spider)
-        self._bookinf = inf
+    def __init__(self, spider, inf=None):
+        if not inf:
+            self._bookinf = bookInf
+        else:
+            self._bookinf = inf
+        self.spider = spider
+        # super().__init__(spider, self._bookinf['url'])
 
     def getCatalogHref(self, point):
-        self._catalog = self.getHref(point)
+        self._catalog = self.get_href(point)
 
     def getbaseinf(self, baseinf):
         for item in baseinf:
-            setattr(self, item, self.getText(baseinf[item]))
+            setattr(self, item, self.get_text(baseinf[item]))
 
     def getCover(self, point):
-        self.getImg(point)
+        self.get_img(point)
 
     def getCatalog(self):
         self.load(self._catalog)
-        self._author = self.getText(self._bookinf['author'])
-        self._catalog_list = self.getCatalogList(self._bookinf['catalog_list'])
+        self._author = self.get_text(self._bookinf['author'])
+        self._catalog_list = self.get_catalog_list(self._bookinf['catalog_list'])
 
     def getChapter(self, point):
 
@@ -115,7 +110,7 @@ class Books(Page):
             else:
                 try:
                     self.load(path)
-                    self.save(name + '.txt', self.getText(point))
+                    self.save(name + '.txt', self.get_text(point))
                 except Exception as e:
                     print(e)
                     continue

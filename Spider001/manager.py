@@ -16,15 +16,15 @@ script： 是需要执行的脚本
 
 import sys
 
-from Spider001.config import header, bookInf, script
+from Spider001.config import bookInf, script
 from Spider001.spider import Spider
 from Spider001.webpage import Books
 from Spider001.script import Script
 
 
 def main(args):
-    sp = Spider(header)
-    bk = Books(bookInf, sp)
+    sp = Spider()
+    bk = Books(sp)
     sc = Script(script, bk)
     sc.run()
 
