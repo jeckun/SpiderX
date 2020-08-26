@@ -34,7 +34,9 @@ class Script(object):
         if hasattr(self.spider, cmd):
             if cmd == 'load':
                 url = cmdline[-(len(cmdline)-len(cmd)):].replace(' ','')
-                if not url_verification(url):
+                if url_verification(url):
+                    setattr(self.book, 'path', url)
+                else:
                     url = getattr(self.book, url)
                 print('执行:', cmd, url)
                 self.spider.load(url)
