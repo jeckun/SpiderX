@@ -30,3 +30,8 @@ def url_verification(url):
 # 验证字符串是否以，指定标记开头
 def start_with(tag, str):
     return re.match(r'^' + tag + r'\w*', str)
+
+
+# 获取字符串第一个单词
+def first_word(string):
+    return string.split(' ', 1)[0]

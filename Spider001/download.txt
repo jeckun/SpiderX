@@ -1,0 +1,9 @@
+Load https://www.17k.com/book/2389507.html
+get_a_text body > div.Main > div.bLeft > div.BookInfo > div.Info.Sign > h1 > a to title
+get_a_text #bookInfo > dd > div:nth-child(1) > p > a to introduction
+get_a_text body > div.Main > div.bLeft > div.BookInfo > div.Info.Sign > div.label > a:nth-child(1) > span to state
+get_a_href body > div.Main > div.bLeft > div.BookInfo > div.Props > dl > dt > a to url
+load url
+get_a_list body > div.Main.List > dl:nth-child(5) > dd > a to catalog_list
+download catalog_list
+quit

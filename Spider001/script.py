@@ -7,34 +7,48 @@
 """
 script: 用于进行脚本解析和执行，以及加载脚本，校验脚本。
 """
+from lib.public import first_word, url_verification
+from Spider001.books import Book
 
 
 class Script(object):
-    _script = None
-    _page = None
-
-    def __init__(self, script=None, page=None):
-        self._script = script
-        self._page = page
+    def __init__(self, filepath, spider):
+        self.filepath = filepath
+        self.spider = spider
+        self.book = Book()
 
     def run(self):
-        self.__runScript__(self._script)
+        print('Ready go!')
+        with open(self.filepath) as f:
+            for line1 in f:
+                cmd = line1.replace('\n', '')
+                self.__parse__(cmd)
 
-    def __runScript__(self, dicts):
-        for i in dicts:
-            # print(i, dicts[i])
-            if i == 'openHome':
-                self._page.load(dicts[i])
-            elif i == 'getText':
-                self._page.get_base_inf(dicts[i])
-            elif i == 'getImg':
-                self._page.get_cover(dicts[i]['_cover'])
-            elif i == 'getHref':
-                self._page.get_catalog_href(dicts[i]['_catalog'])
-            elif i == 'openCatalog':
-                self._page.get_catalog()
-            elif i == 'getChapter':
-                self._page.get_chapter(dicts[i])
-            else:
-                pass
+    def __parse__(self, cmdline):
+        """
+        解析命令行，并且执行
+        :param cmd: 命令行文本
+        :return:
+        """
+        cmd = first_word(cmdline).lower()
+        if hasattr(self.spider, cmd):
+            if cmd == 'load':
+                url = cmdline[-(len(cmdline)-len(cmd)):].replace(' ','')
+                if not url_verification(url):
+                    url = getattr(self.book, url)
+                print('执行:', cmd, url)
+                self.spider.load(url)
+            if cmd in ('get_a_text', 'get_a_href', 'get_a_list'):
+                fun = getattr(self.spider, cmd)
+                cmdline = cmdline[-(len(cmdline)-len(cmd)):]
+                selector, x = cmdline.split(' to ')
+                print('执行:', cmd, selector, 'to', x)
+                setattr(self.book, x, fun(selector))
+            if cmd == 'download':
+                fun = getattr(self.spider, cmd)
+                spider_list = cmdline[-(len(cmdline)-len(cmd)):].replace(' ','')
+                print('执行:', cmd, spider_list)
+                fun(getattr(self.book, spider_list))
+            elif cmd == 'quit':
+                print('end.')
         return
