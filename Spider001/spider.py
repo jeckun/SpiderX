@@ -65,7 +65,8 @@ class Spider(object):
     def get_a_text(page, point):
         if point:
             doc = page.content.select(point)
-            return doc[0].text.replace('\r', '').replace('\n', '').replace('\t', '')
+            return doc[0].text.replace('\r', '').replace('\n', '').\
+                replace('\t', '')
 
     @staticmethod
     def get_img_src(page, point):
