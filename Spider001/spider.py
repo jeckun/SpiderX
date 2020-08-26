@@ -14,7 +14,7 @@ import random
 import time
 from urllib.parse import urlparse
 from requests.adapters import HTTPAdapter
-from bs4 import BeautifulSoup as bs
+from bs4 import BeautifulSoup
 from Spider001.config import header
 from lib.public import url_verification, start_with
 
@@ -36,7 +36,7 @@ class Spider(object):
     def load(self, page):
         try:
             # 打开网页获取BS解析后的内容
-            page.content = bs(self.get_page_content(page._url), "lxml")
+            page.content = BeautifulSoup(self.get_page_content(page._url), "lxml")
 
             # 同步Page的网址信息
             page._scheme = self._urlparse.scheme
@@ -61,30 +61,35 @@ class Spider(object):
         time.sleep(random.randint(1, 10))
         return response.content
 
-    def get_a_text(self, page, point):
+    @staticmethod
+    def get_a_text(page, point):
         if point:
             doc = page.content.select(point)
             return doc[0].text.replace('\r', '').replace('\n', '').replace('\t', '')
 
-    def get_img_src(self, page, point):
+    @staticmethod
+    def get_img_src(page, point):
         if point:
             doc = page.content.select(point)
             return doc[0]['src']
         else:
             return ''
 
-    def get_a_href(self, page, point):
+    @staticmethod
+    def get_a_href(page, point):
         if point:
             doc = page.content.select(point)
             return doc[0]['href']
         else:
             return ''
 
-    def get_page_list(self, page, point):
-        return [[l.text.replace('\r', '').replace('\n', '').replace('\t', ''),
-                 l['href'][1:]] for l in page.content.select(point)]
+    @staticmethod
+    def get_page_list(page, point):
+        return [[ls.text.replace('\r', '').replace('\n', '').replace('\t', ''),
+                 ls['href'][1:]] for ls in page.content.select(point)]
 
-    def get_full_path(self, page, path):
+    @staticmethod
+    def get_full_path(page, path):
         if not url_verification(path):
             if start_with(r'//', path):
                 return page._scheme + ':' + path
