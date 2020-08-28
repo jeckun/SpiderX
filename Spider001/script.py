@@ -35,9 +35,9 @@ class Script(object):
             if cmd == 'load':
                 url = cmdline[-(len(cmdline)-len(cmd)):].replace(' ','')
                 if url_verification(url):
-                    setattr(self.book, 'path', url)
+                    setattr(self.spider.page, 'path', url)
                 else:
-                    url = getattr(self.book, url)
+                    url = getattr(self.spider.page, url)
                 print('执行:', cmd, url)
                 self.spider.load(url)
             if cmd in ('get_a_text', 'get_a_href', 'get_a_list'):
@@ -45,12 +45,13 @@ class Script(object):
                 cmdline = cmdline[-(len(cmdline)-len(cmd)):]
                 selector, x = cmdline.split(' to ')
                 print('执行:', cmd, selector, 'to', x)
-                setattr(self.book, x, fun(selector))
+                setattr(self.spider.page, x, fun(selector))
             if cmd == 'download':
                 fun = getattr(self.spider, cmd)
-                spider_list = cmdline[-(len(cmdline)-len(cmd)):].replace(' ','')
-                print('执行:', cmd, spider_list)
-                fun(getattr(self.book, spider_list))
+                cmdline = cmdline[-(len(cmdline)-len(cmd)):]
+                selector, x = cmdline.split(' in ')
+                print('执行:', cmd, x)
+                fun(getattr(self.spider.page, x), selector=selector)
             elif cmd == 'quit':
                 print('end.')
         return

@@ -5,5 +5,8 @@
 # time: 2020-8-27
 
 class Book(object):
-    pass
+    def __init__(self):
+        self.title = ''
 
+    def __str__(self):
+        return self.title

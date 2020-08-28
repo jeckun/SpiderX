@@ -5,5 +5,5 @@ get_a_text body > div.Main > div.bLeft > div.BookInfo > div.Info.Sign > div.labe
 get_a_href body > div.Main > div.bLeft > div.BookInfo > div.Props > dl > dt > a to url
 load url
 get_a_list body > div.Main.List > dl:nth-child(5) > dd > a to catalog_list
-download catalog_list
+download #readArea > div.readAreaBox.content in catalog_list
 quit
