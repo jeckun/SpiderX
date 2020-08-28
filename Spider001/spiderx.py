@@ -60,18 +60,29 @@ class Spider(object):
 
         thread_list = []
 
+        # 创建线程
         for i in lst:
             filename = i[0] + '.txt'
             url = i[1]
             thd = threading.Thread(target=self.save_file,
                                    args=(filename, url, selector))
+            # target参数为线程开始执行的入口
+            # args参数为执行函数的参数列表，是一个元组结构
+            # 可以通过这个带入线程需要接受的参数列表。
             thread_list.append(thd)
 
+        # 启动线程
         for thd in thread_list:
+            # 设定子线程为守护线程
+            # 使用setDaemon(True)，设置子线程为守护线程时，主线程一旦执行结束，
+            # 则全部线程全部被终止执行，
             thd.setDaemon(True)
             thd.start()
 
+        # 阻塞主线程到子线程执行结束
         for thd in thread_list:
+            # join所完成的工作就是线程同步，即主线程任务结束之后，进入阻塞状态，
+            # 一直等待其他的子线程执行结束之后，主线程在终止。
             thd.join()
 
     @staticmethod
