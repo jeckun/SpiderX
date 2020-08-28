@@ -46,7 +46,7 @@ class Script(object):
                 selector, x = cmdline.split(' to ')
                 print('执行:', cmd, selector, 'to', x)
                 setattr(self.spider.page, x, fun(selector))
-            if cmd == 'download':
+            if cmd == 'download_list':
                 fun = getattr(self.spider, cmd)
                 cmdline = cmdline[-(len(cmdline)-len(cmd)):]
                 selector, x = cmdline.split(' in ')
