@@ -15,17 +15,30 @@ script： 是需要执行的脚本
 """
 
 import sys
+import os
 
-from Spider001.config import script
-from Spider001.spider import Spider
-from Spider001.webpage import Books
 from Spider001.script import Script
+from Spider001.spiderx import Spider
+from Spider001.config import BASE_DIR
+
+print("""
+-------------------------------
+SpiderX by Book v1.03
+帮助你快速下载图书网站免费图书。
+使用方法：
+1. 参照download.txt的脚本
+2. 使用Chrome浏览器的开发者模式，找到需要下载图书的信息，再用copy selector的方式获取路径。
+-------------------------------
+""")
 
 
 def main(args):
+    scriptfile = os.path.join(BASE_DIR, 'Spider001', 'download.txt')
+    if not os.path.exists(scriptfile):
+        print("请先准备好下载脚本。")
+        return
     sp = Spider()
-    bk = Books(sp)
-    sc = Script(script, bk)
+    sc = Script(scriptfile, sp)
     sc.run()
 
 
