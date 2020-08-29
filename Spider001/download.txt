@@ -1,4 +1,4 @@
-Load https://www.17k.com/book/2389507.html
+Load https://www.17k.com/book/493239.html
 get_a_text body > div.Main > div.bLeft > div.BookInfo > div.Info.Sign > h1 > a to title
 get_a_text #bookInfo > dd > div:nth-child(1) > p > a to introduction
 get_a_text body > div.Main > div.bLeft > div.BookInfo > div.Info.Sign > div.label > a:nth-child(1) > span to state
