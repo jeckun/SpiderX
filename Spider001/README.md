@@ -21,6 +21,22 @@
            含义是：用这个命令，找到目标网页的指定位置，获取响应信息，放入/从，变量
         5. 脚本编写好之后，就可以执行脚本。在命令行输入: python run.py
         
+### 脚本解释
+
+- 脚本
+    
+        - Load: 加载网页
+        格式： load <url>
+        - get_a_text: 获取指定位置的文本，放到Book对象的指定属性中
+        格式： get_a_text <Selector> to title
+        - get_a_href：获取a标签的网址，放到Book对象指定的属性中
+        格式： get_a_href <Selector> to url
+        - get_a_list: 获取网页在指定a标签的列表，列表内容包括：章节名称和获取网址，放到Book对象的指定属性(catalog_list)中
+        格式： get_a_list <Selector> to catalog_list
+        - download_list: 从刚才的章节列表(catalog_list)中，下载章节内容
+        格式: download_list <Selector> in catalog_list
+        - quit: 用于退出脚本，当然不放也行。
+
 ### 更新日志
 
 - 日志
