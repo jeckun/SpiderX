@@ -27,14 +27,19 @@
     
         - Load: 加载网页
         格式： load <url>
+        
         - get_a_text: 获取指定位置的文本，放到Book对象的指定属性中
         格式： get_a_text <Selector> to title
+        
         - get_a_href：获取a标签的网址，放到Book对象指定的属性中
         格式： get_a_href <Selector> to url
+        
         - get_a_list: 获取网页在指定a标签的列表，列表内容包括：章节名称和获取网址，放到Book对象的指定属性(catalog_list)中
         格式： get_a_list <Selector> to catalog_list
+        
         - download_list: 从刚才的章节列表(catalog_list)中，下载章节内容
         格式: download_list <Selector> in catalog_list
+        
         - quit: 用于退出脚本，当然不放也行。
 
 ### 更新日志
