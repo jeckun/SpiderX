@@ -5,7 +5,7 @@
 # time: 2020-8-19
 
 """
-Spider: 代表爬虫的行为，包括获取网页，解析网页
+SpiderBook: 代表爬虫的行为，包括获取网页，解析网页
 page: 代表网页的属性及操作，属性包括域名、网址、网页内容、列表，操作包括保存数据
 Book：代表图书的属性及操作，属性包括书名、作者、状态、字数等，操作包括下载图书
 Script: 代表的是解析和执行自定义脚本
@@ -17,8 +17,8 @@ script： 是需要执行的脚本
 import sys
 import os
 
-from Spider001.script import Script
-from Spider001.spiderx import Spider
+from lib.script import Script
+from Spider001.spiderbook import SpiderBook
 from Spider001.config import BASE_DIR
 
 print("""
@@ -37,7 +37,7 @@ def main(args):
     if not os.path.exists(scriptfile):
         print("请先准备好下载脚本。")
         return
-    sp = Spider()
+    sp = SpiderBook()
     sc = Script(scriptfile, sp)
     sc.run()
 
