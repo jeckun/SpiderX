@@ -1,0 +1,55 @@
+# -*- coding: utf-8 -*-
+from datetime import datetime
+from uuid import uuid4
+import sqlalchemy
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import create_engine, Column, Float, Integer, String, Text, Date, DateTime
+from sqlalchemy.orm import sessionmaker
+
+Base = declarative_base()
+
+
+class Engine:
+    def connect(self):
+        # engine = create_engine('sqlite:///foo.db')
+        self.engine = create_engine('sqlite:///:memory:', echo=True)
+        Session = sessionmaker(bind=self.engine)
+        self.session = Session()
+        Base.metadata.create_all(self.engine, checkfirst=True)
+
+    def add(self, row):
+        self.session.add(row)
+        self.session.commit()
+
+    def delete(self, row):
+        self.session.delete(row)
+        self.session.commit()
+
+    def update(self, row):
+        self.session.commit()
+
+    def query(self, **kwargs):
+        cmd = "self.session.query(%s)" % self.__class__.__name__
+        print(__name__)
+        for kw in kwargs:
+            cmd += ".filter(%s.%s == '%s')" % (self.__class__.__name__, kw,
+                                               kwargs[kw])
+        cmd += ".first()"
+        return eval(cmd)
+
+    def get_all(self):
+        return self.session.query(Test).all()
+
+
+class Test(Base, Engine):
+    __tablename__ = 'Test'
+    key = Column(String(36), nullable=False,
+                 default=str(uuid4()))
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    code = Column(String(100), nullable=False)
+    name = Column(String(100), nullable=False)
+    age = Column(Integer, default=0)
+    createtime = Column(
+        DateTime, server_default=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+    modifytime = Column(DateTime, nullable=False,
+                        server_default=datetime.now().strftime("%Y-%m-%d %H:%M:%S"), onupdate=datetime.now())
