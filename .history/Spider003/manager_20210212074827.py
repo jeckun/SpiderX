@@ -18,7 +18,8 @@ def main(args):
     db.insert(row)
 
     rr = db.find(name='jeck')
-    db.delete(rr)
+    db.delete(rr.next())
+    db.delete(rr.next())
 
     row = Test(code='003', name='black', age=19)
     db.insert(row)

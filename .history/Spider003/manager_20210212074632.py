@@ -19,6 +19,7 @@ def main(args):
 
     rr = db.find(name='jeck')
     db.delete(rr)
+    db.delete(rr.next())
 
     row = Test(code='003', name='black', age=19)
     db.insert(row)

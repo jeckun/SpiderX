@@ -17,8 +17,9 @@ def main(args):
     row = Test(code='002', name='jeck', age=23)
     db.insert(row)
 
-    rr = db.find(name='jeck')
-    db.delete(rr)
+    rst = db.find(name='jeck')
+    db.delete(rst)
+    db.delete(rst.next())
 
     row = Test(code='003', name='black', age=19)
     db.insert(row)
