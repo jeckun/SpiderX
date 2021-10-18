@@ -251,11 +251,15 @@ if __name__ == '__main__':
     # filename = '一夜情深'
     # url = 'https://bp1.dkkomo.com/stream/full/three/100/three-000044.m3u8'
 
-    # filename = '玉蒲团之偷情宝鉴'
-    # url = 'https://s1.mimivodplay.com/mimi4/20210921/三级剧情/亚洲剧情-玉蒲团之偷情宝鉴/SD/playlist.m3u8'
+    filename = '玉蒲团之偷情宝鉴'
+    url = 'https://s1.mimivodplay.com/mimi4/20210921/三级剧情/亚洲剧情-玉蒲团之偷情宝鉴/SD/playlist.m3u8'
 
-    filename = '香蕉成熟时II初恋情人'
-    url = 'https://s1.mimivodplay.com/mimi4/20210917/三级剧情/亚洲剧情-香蕉成熟时II初恋情人/SD/playlist.m3u8'
+    # filename = '香蕉成熟时II初恋情人'
+    # url = 'https://s1.mimivodplay.com/mimi4/20210917/三级剧情/亚洲剧情-香蕉成熟时II初恋情人/SD/playlist.m3u8'
+
+    # filename = '官人我要'
+    # url = 'https://s1.mimivodplay.com/mimi4/20210808/三级剧情/亚洲剧情-官人我要/SD/playlist.m3u8'
+
 
     print("star download %s!" % filename)
     downloader = M3u8VideoDownloader(url, os.path.join(os.getcwd(), "video", filename))
