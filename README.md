@@ -1,7 +1,9 @@
 # SpiderX
 
 > 项目目标 :
-> 实现通过脚本定期自动下载互联网的各类资源，并记录各类资源的来源及相关信息。
+> - 通过脚本自动下载互联网的各类资源
+> - 灵活自定义记录各类资源的相关信息
+> - 支持多线程下载
 
 
 ## 相关依赖
@@ -10,9 +12,9 @@ python3.11 + DrissionPage + Sqlite
 
 ## 使用方法
 
-$ python manager.py <jobs.ls>
+$ python manager.py <jobs.json>
 
-## 脚本模板 -- jobs.ls
+## 脚本模板 -- jobs.json
 
 ```python
 {
@@ -22,7 +24,7 @@ $ python manager.py <jobs.ls>
         'start': 0,         # 开始页面
         'end': 10,          # 截至页面
         'route': "/page/%d",
-        'task_list': "//main/article/headr/h2/a',
+        'article_list_xpath': "//main/article/headr/h2/a',
     },
     'article_xpath':{
         'title': '',
@@ -31,6 +33,9 @@ $ python manager.py <jobs.ls>
         'type': '',
         'tag': '',
         'content':'//main/article/div/p',
+    },
+    'download':{
+        'save_to_path':'',
     }
 }
 ```
