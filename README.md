@@ -13,12 +13,27 @@ python3.11 + DrissionPage + Sqlite
 
 ## 使用方法
 
+$ python manager.py <jobs.ls>
 
+## 脚本模板 -- jobs.ls
 
-## 应用效果
-
-目前只支持脚本执行，并且还需要完善。效果图就先不上了。
-
-## 欢迎共创
-
-喜欢本项目的朋友可以和我一起来完成这个项目，欢迎交流和共建。
+'''
+{
+    'site_title': 'XXX博客',
+    'host': 'https://www.xxxx.com',
+    'jobs': {
+        'start': 0,         # 开始页面
+        'end': 10,        # 截至页面
+        'route': "/page/%d",
+        'task_list': "//main/article/headr/h2/a',
+    },
+    'article_xpath':{
+        'title': '',
+        'author': '',
+        'time': '',
+        'type': '',
+        'tag': '',
+        'content':'//main/article/div/p',
+    }
+}
+'''
