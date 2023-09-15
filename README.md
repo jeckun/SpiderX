@@ -1,21 +1,19 @@
-# 欢迎关注SpiderX
+# SpiderX
 
-*这是一个Python小白学习Python和爬虫的实验性项目，希望通过这个项目掌握Python基础、爬虫、Django Web开发、自动化测试、多线程、分布式开发等内容。本项目的目标是：*
+'''
+项目目标：
 
-- Spider001：[抓取免费图书](Spider001/README.md)
-- Spider002：[抓取公共视频](Spider002/README.md)
-- Spider003：抓取免费音频
-- Spider004：抓取热点新闻
-- Spider005：获取商品信息
-- Spider006：获取招聘信息
+实现通过脚本定期自动下载互联网的各类资源，并记录各类资源的来源及相关信息。
 
-## 运行环境
+'''
 
-mac + python3.6 + django2.0 + BeautifulSoup4
+## 相关依赖
+
+python3.11 + DrissionPage + Sqlite
 
 ## 使用方法
 
-计划该爬虫可以支持脚本执行和命令行执行。通过预先设定的脚本，或者单步执行的方式获取网址的信息。
+
 
 ## 应用效果
 
