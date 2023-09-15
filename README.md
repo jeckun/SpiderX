@@ -8,7 +8,7 @@
 
 ## 相关依赖
 
-python3.11 + DrissionPage + Sqlite
+python3.11 + DrissionPage + Sqlite3.0
 
 ## 使用方法
 
