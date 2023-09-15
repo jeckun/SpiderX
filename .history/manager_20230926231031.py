@@ -13,7 +13,7 @@ def openfile(filename):
     #         else:
     #             content += text
     # return content
-    with open(filename,'r',encoding='utf-8',header=None) as f:
+    with open(filename,'r',encoding='utf-8') as f:
         return f.readlines()
 
 
