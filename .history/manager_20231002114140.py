@@ -23,7 +23,7 @@ if __name__ == '__main__':
     sp = Spider(xpath['host'])
     bk = Book(xpath, sp)
     bk.get_base_inf()
-    a = bk.get_catalog_inf()
-    b = bk.get_nav_inf()
+    bk.get_catalog_inf()
+    bk.get_nav_inf()
 
     print(bk.book_name)
