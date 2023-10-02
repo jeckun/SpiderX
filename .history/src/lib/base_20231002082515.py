@@ -1,0 +1,22 @@
+import os
+import chardet
+
+# 检查文件编码
+def check_encode(filename):
+    file = open(filename, 'rb')
+    data = file.read()
+    encode = chardet.detect(data)
+    file.close()
+    en = 'gbk' if encode['encoding']=='GB2312' else encode['encoding']
+    return 'utf-8' if en==None else en
+
+# 分段读取文件
+# 调用方法：
+# for block in openfile(filename):
+#        print(block)
+def openfile(filename, block=1024):
+    with open(filename, 'r', buffering=4096, encoding=check_encode(filename)) as f:
+        size = f.seek(0, os.SEEK_END)
+        f.seek(0)
+        while f.tell()<size:
+            yield f.read(2048)
