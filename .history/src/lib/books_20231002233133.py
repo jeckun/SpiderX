@@ -78,7 +78,7 @@ class Book():
                 category=card.ele(self.__info['category_tags']).text,
                 label=self.get_lebals(card.eles(self.__info['label_tags'])),
             )
-            self.__storys.append(st)
+            # print(st) 
 
     # 整理标签
     def get_lebals(self, tags=None):

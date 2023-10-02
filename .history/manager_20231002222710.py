@@ -15,10 +15,11 @@ if __name__ == '__main__':
         'story_card_path':'//main/article',         # 故事卡片区域
         'story_name':'@class=entry-title',          # 故事名称
         'author_path':'@class=author vcard',        # 故事作者
-        'publish_date':'@class=entry-date published',    # 发表日期
-        'category_tags':'@rel=category tag',        # 故事类别
-        'label_tags':'@class=tags-links',           # 故事标签
+        'publish_date_path':'@class=entry-date published',    # 发表日期
+        'category_path':'@rel=category tag',        # 故事类别
+        'label_path':'@class=tags-links',           # 故事标签
 
+        'story_url':'@rel=bookmark',                # 故事链接
         'story_content':'@class=entry-content',         # 故事正文
         'thread_no': 5,          # 下载线程数
     }

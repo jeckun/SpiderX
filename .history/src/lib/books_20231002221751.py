@@ -22,8 +22,33 @@ class Story:
         self.__category=category
         self.__labels=label
 
-    def __str__(self):
-        return '|'.join([self.__story_name, self.__story_author, self.__publish_date, self.__category, ':'.join(self.__labels), self.__story_url])
+    @property 
+    def id(self):
+        return self.__id
+    
+    @property
+    def name(self):
+        return self.__story_name
+    
+    @property
+    def author(self):
+        return self.__story_author
+
+    @property
+    def publish_date(self):
+        return self.__publish_date
+    
+    @property
+    def category(self):
+        return self.__story_category
+    
+    @property
+    def label(self):
+        return self.__story_label
+
+    @property
+    def story_path(self):
+        return os.path.join(BASE_DIR,self.__save_path,self.__story_path)
 
 class Book():
     __id=''
@@ -49,9 +74,8 @@ class Book():
     # 开始下载文章
     def download(self, x, y):
         # 获取下载文章列表
-        for p in range(x,y+1):
-            print("get page", p)
-            self.get_story_card(p)
+        for p in range(x,y):
+            self.get_catalog_inf(p)
     
         # 校验是否已经下载
 
@@ -66,23 +90,20 @@ class Book():
 
     # 获得文章列表
     def get_story_card(self, page_n):
-        self.__sp.load_page(self.__host + self.__info['page_url'] % page_n)
-        story_cards=self.__sp.get_all_element_path(self.__info['story_card_path'])
+        self.__sp.get(self.__host + self.__info['page_url'] % page_n)
+        story_cards=self.__sp.get_all_element_path(self.story_card_path)
         # 解析故事卡片信息
         for card in story_cards:
             st=Story(
-                name=card.ele(self.__info['story_name']).ele('tag:a').text,
-                url=card.ele(self.__info['story_name']).ele('tag:a').link,
-                author=card.ele(self.__info['author_path']).ele('tag:a').text,
-                publish=card.ele(self.__info['publish_date']).text,
-                category=card.ele(self.__info['category_tags']).text,
-                label=self.get_lebals(card.eles(self.__info['label_tags'])),
+                name=card,
+                url=None,
+                author=None,
+                publish=None,
+                category=None,
+                label=None
             )
-            self.__storys.append(st)
+            pass 
 
-    # 整理标签
-    def get_lebals(self, tags=None):
-        tgs=[]
-        for i in range(len(tags)):
-            tgs.append(tags[i].ele('tag:a').text)
-        return tgs
+    # 获得文章列表
+    def get_story_list(self):
+        pass

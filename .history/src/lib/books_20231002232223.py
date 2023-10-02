@@ -23,7 +23,7 @@ class Story:
         self.__labels=label
 
     def __str__(self):
-        return '|'.join([self.__story_name, self.__story_author, self.__publish_date, self.__category, ':'.join(self.__labels), self.__story_url])
+        return self.__story_name, self.__story_author, self.__publish_date, self.__category, self.__labels, self.__story_url
 
 class Book():
     __id=''
@@ -49,8 +49,7 @@ class Book():
     # 开始下载文章
     def download(self, x, y):
         # 获取下载文章列表
-        for p in range(x,y+1):
-            print("get page", p)
+        for p in range(x,y):
             self.get_story_card(p)
     
         # 校验是否已经下载
@@ -78,11 +77,11 @@ class Book():
                 category=card.ele(self.__info['category_tags']).text,
                 label=self.get_lebals(card.eles(self.__info['label_tags'])),
             )
-            self.__storys.append(st)
+            print(st) 
 
     # 整理标签
     def get_lebals(self, tags=None):
         tgs=[]
         for i in range(len(tags)):
-            tgs.append(tags[i].ele('tag:a').text)
+            tg[i].append(tags[i].ele('tag:a').text)
         return tgs

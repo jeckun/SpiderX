@@ -19,6 +19,7 @@ if __name__ == '__main__':
         'category_tags':'@rel=category tag',        # 故事类别
         'label_tags':'@class=tags-links',           # 故事标签
 
+        'story_url':'@rel=bookmark',                # 故事链接
         'story_content':'@class=entry-content',         # 故事正文
         'thread_no': 5,          # 下载线程数
     }
