@@ -114,6 +114,10 @@ class Site():
             id = ''.join([str(i) for i in random.sample(range(100, 900), 6)])
             labs = ''.join(sto.labels) if sto.labels else ''
             seri = list(sto.series)[0] if sto.series else ''
+            # sql = f"insert into story_download_list(id, name, url, author, publish, " \
+            # + "category, labels, savepath, series) values " \
+            # + "('','{sto.name}','{sto.url}','{sto.author}','{sto.publish}'," \
+            # + "'{sto.category}','{labs}','{sto.savepath}','{seri}');"
             sql = "insert into story_download_list(id, name, url, author, publish, " \
                 + "category, labels, savepath, series) values " \
                 + "('%s','%s','%s','%s','%s'," \

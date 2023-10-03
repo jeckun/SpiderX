@@ -1,6 +1,5 @@
 import os
 import copy
-import random
 from datetime import date
 from src.spider import Spider
 from src.model import SqliteDB
@@ -85,7 +84,7 @@ class Site():
                 self.save(filename, ck.content)
 
             # 将文件存放路径改为相对路径
-            ck.savepath=filename.replace(BASE_DIR,'.')
+            ck.savepath=filename.replace(BASE_DIR,'/')
 
         # 更新数据库
         self.save_to_db()
@@ -110,16 +109,7 @@ class Site():
             self.db.create_table(sql)
 
         # 插入数据
-        for sto in self.storys:
-            id = ''.join([str(i) for i in random.sample(range(100, 900), 6)])
-            labs = ''.join(sto.labels) if sto.labels else ''
-            seri = list(sto.series)[0] if sto.series else ''
-            sql = "insert into story_download_list(id, name, url, author, publish, " \
-                + "category, labels, savepath, series) values " \
-                + "('%s','%s','%s','%s','%s'," \
-                + "'%s','%s','%s','%s');"
-            self.db.execute(sql % (id,sto.name,sto.url,sto.author,sto.publish,sto.category,labs,sto.savepath,seri))
-            self.db.commit()
+
 
 
     # 获得文章列表

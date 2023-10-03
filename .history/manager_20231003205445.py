@@ -12,6 +12,6 @@ if __name__ == '__main__':
     print(f"Start download stories from site: {cfg['host']} - {cfg['site_title']}")
 
     sit = Site(cfg)
-    sit.download(2, 2)
+    sit.download(1, 1)
 
     print(f"Download completed.")

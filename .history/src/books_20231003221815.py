@@ -111,15 +111,12 @@ class Site():
 
         # 插入数据
         for sto in self.storys:
-            id = ''.join([str(i) for i in random.sample(range(100, 900), 6)])
-            labs = ''.join(sto.labels) if sto.labels else ''
-            seri = list(sto.series)[0] if sto.series else ''
-            sql = "insert into story_download_list(id, name, url, author, publish, " \
-                + "category, labels, savepath, series) values " \
-                + "('%s','%s','%s','%s','%s'," \
-                + "'%s','%s','%s','%s');"
-            self.db.execute(sql % (id,sto.name,sto.url,sto.author,sto.publish,sto.category,labs,sto.savepath,seri))
-            self.db.commit()
+            id = random_list = random.sample(range(100, 900), 6)
+            sql = f"insert into story_download_list(id, name, url, author, publish, " \
+            + "category, labels, savepath, series) values " \
+            + "('{id}','{sto.name}','{sto.url}','{sto.author}','{sto.publish}'," \
+            + "'{sto.category}','','{sto.savepath}','');"
+            self.db.execute(sql)
 
 
     # 获得文章列表
