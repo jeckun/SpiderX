@@ -1,29 +1,27 @@
 import os
 from datetime import date
-from pathlib import Path
 from src.lib.spider import Spider
-
-BASE_DIR = Path(__file__).resolve().parent.parent
+from manager import BASE_DIR
 
 class Story:
-    __story_url=''
-    __story_name=''
-    __story_author=''
-    __publish_date=''
-    __category=''
-    __labels=None
-    __content=''
+    url=''
+    name=''
+    author=''
+    publish_date=''
+    category=''
+    labels=None
+    content=''
 
     def __init__(self, name, url, author=None, publish=None, category=None, label=None):
-        self.__story_url=url
-        self.__story_name=name
-        self.__story_author=author
-        self.__publish_date=publish
-        self.__category=category
-        self.__labels=label
+        self.url=url
+        self.name=name
+        self.author=author
+        self.publish_date=publish
+        self.category=category
+        self.labels=label
 
     def __str__(self):
-        return '|'.join([self.__story_name, self.__story_author, self.__publish_date, self.__category, ':'.join(self.__labels), self.__story_url])
+        return '|'.join([self.name, self.author, self.publish_date, self.category, ':'.join(self.labels), self.url])
 
 
 class Book():
@@ -43,6 +41,11 @@ class Book():
         print(f'Found {len(self.storys)} articles.')
 
         # 校验是否已经下载
+        for ck in self.storys:
+            filename=os.path.join(BASE_DIR,self.config['book_path'],ck.name+'.txt')
+            if os.path.exists(filename):
+                # 如果存在，就剔除掉这个下载任务
+                print('exsist', filename)
 
         # 获取剩余需要下载文章的信息
 

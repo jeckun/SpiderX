@@ -18,6 +18,10 @@ class Spider:
     def find_elements(self, xpath: str):
         return self.page.s_eles(f'xpath:{xpath}')
     
+    def get_article(self, url:str, xpath:str):
+        self.page.get(url)
+        cts = self.page.eles(f'{xpath}')
+        return [p.text for p in cts]
     # def get_all_element_path(self, info_xpath: str):
     #     return self.__page.s_eles(f'xpath:{info_xpath}')
     
