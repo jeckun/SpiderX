@@ -23,7 +23,7 @@ def read_file_block(filename, block=1024):
             yield f.read(2048)
 
 # 读取配置文件
-def config(filename):
+def config(filename, sections=()):
     rst = {}
     cf = configparser.ConfigParser()
     cf.read(filename,encoding="utf-8")

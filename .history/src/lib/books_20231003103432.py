@@ -32,16 +32,15 @@ class Book():
     page=None
     def __init__(self, config: dict):
         self.config=config
-        self.spider=Spider()
+        self.page=Spider()
 
     # 开始下载文章
     def download(self, x, y):
         # 获取下载文章列表
         for p in range(x,y+1):
-            print("download page:", p)
+            print("get page", p)
             self.get_story_card(p)
-        print(f'Found {len(self.storys)} articles.')
-
+    
         # 校验是否已经下载
 
         # 获取剩余需要下载文章的信息
@@ -56,8 +55,8 @@ class Book():
     # 获得文章列表
     def get_story_card(self, page_n):
         url = self.config['host']+self.config['next_page'] % page_n
-        self.spider.get(url)
-        story_cards=self.spider.find_elements(self.config['card_path'])
+        self.page.get(url)
+        story_cards=self.page.find_elements(self.config['card_path'])
         # 提取故事卡片信息
         for card in story_cards:
             st=Story(

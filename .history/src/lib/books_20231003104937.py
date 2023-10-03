@@ -40,8 +40,7 @@ class Book():
         for p in range(x,y+1):
             print("download page:", p)
             self.get_story_card(p)
-        print(f'Found {len(self.storys)} articles.')
-
+    
         # 校验是否已经下载
 
         # 获取剩余需要下载文章的信息

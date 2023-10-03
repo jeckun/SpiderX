@@ -29,19 +29,16 @@ class Story:
 class Book():
     config={}
     storys=[]
-    page=None
     def __init__(self, config: dict):
         self.config=config
-        self.spider=Spider()
 
     # 开始下载文章
     def download(self, x, y):
         # 获取下载文章列表
         for p in range(x,y+1):
-            print("download page:", p)
+            print("get page", p)
             self.get_story_card(p)
-        print(f'Found {len(self.storys)} articles.')
-
+    
         # 校验是否已经下载
 
         # 获取剩余需要下载文章的信息
@@ -55,20 +52,20 @@ class Book():
 
     # 获得文章列表
     def get_story_card(self, page_n):
-        url = self.config['host']+self.config['next_page'] % page_n
-        self.spider.get(url)
-        story_cards=self.spider.find_elements(self.config['card_path'])
-        # 提取故事卡片信息
+        url=self.__host + self.__info['page_url'] % page_n
+        self.__spider.get(url)
+        story_cards=self.__spider.find_elements(self.__info['story_card_path'])
+        # 解析故事卡片信息
         for card in story_cards:
             st=Story(
-                name=card.ele(self.config['story_title']).ele('tag:a').text,
-                url=card.ele(self.config['story_title']).ele('tag:a').link,
-                author=card.ele(self.config['author']).ele('tag:a').text,
-                publish=card.ele(self.config['publish_date']).text,
-                category=card.ele(self.config['category_tags']).text,
-                label=self.get_lebals(card.eles(self.config['label_tags'])),
+                name=card.ele(self.__info['story_name']).ele('tag:a').text,
+                url=card.ele(self.__info['story_name']).ele('tag:a').link,
+                author=card.ele(self.__info['author_path']).ele('tag:a').text,
+                publish=card.ele(self.__info['publish_date']).text,
+                category=card.ele(self.__info['category_tags']).text,
+                label=self.get_lebals(card.eles(self.__info['label_tags'])),
             )
-            self.storys.append(st)
+            self.__storys.append(st)
 
     # 整理标签
     def get_lebals(self, tags=None):

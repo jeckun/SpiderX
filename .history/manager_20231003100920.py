@@ -11,7 +11,8 @@ if __name__ == '__main__':
 
     print(f"Start download stories from site: {cfg['host']} - {cfg['site_title']}")
 
-    bks = Book(cfg)
-    bks.download(1, 2)
+    sp = Spider(xpath['host'])
+    bk = Book(xpath, sp)
+    bk.download(1, 2)
 
     print(f"Download completed.")

@@ -16,7 +16,7 @@ class Spider:
         return self.page.get(url)
 
     def find_elements(self, xpath: str):
-        return self.page.s_eles(f'xpath:{xpath}')
+        return self.page.s_eles(xpath)
     
     # def get_all_element_path(self, info_xpath: str):
     #     return self.__page.s_eles(f'xpath:{info_xpath}')

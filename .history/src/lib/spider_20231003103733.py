@@ -7,16 +7,16 @@ THREADNO = 5
 
 class Spider:
     def __init__(self, thread_no=THREADNO):
-        self.thread_no = thread_no
-        self.page = SessionPage() if DOWNLOADTYPE == 'S' else ChromiumPage()
+        self.__thread_no = thread_no
+        self.__page = SessionPage() if DOWNLOADTYPE == 'S' else ChromiumPage()
         # self.get(host)
         # self.recorder=Recorder('data.csv')
 
     def get(self, url):
-        return self.page.get(url)
+        return self.__page.get(url)
 
     def find_elements(self, xpath: str):
-        return self.page.s_eles(f'xpath:{xpath}')
+        return self.__page.s_eles(xpath)
     
     # def get_all_element_path(self, info_xpath: str):
     #     return self.__page.s_eles(f'xpath:{info_xpath}')
