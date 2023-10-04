@@ -78,7 +78,7 @@ class Site():
                 print("%d|%d: " % (i+1, len(self.storys)),'file exsist.', ck.name)
             else:
                 # 保存文件
-                print("%d|%d: " % (i+1, len(self.storys)),'file saved.', ck.name)
+                print("%d|%d: " % (i+1, len(self.storys)),'file save to:', ck.name)
                 mkdirs(os.path.dirname(filename))
                 if ck.content == '':
                     ck.content=self.get_article_content(ck.url)
@@ -109,16 +109,16 @@ class Site():
                 );"""
             self.db.create_table(sql)
 
-
         # 插入数据
         for sto in self.storys:
             id = ''.join([str(i) for i in random.sample(range(100, 900), 6)])
             labs = ''.join(sto.labels) if sto.labels else ''
             seri = list(sto.series)[0] if sto.series else ''
 
+
             # 插入前检查是否已有记录，有的跳过
             if self.db.query_recorder('story_download_list',f'name="{sto.name}"'):
-                print(f'归档过: {sto.name}')
+                print(f'文章记录已经存在: {sto.name}')
                 continue
             
             # 没有记录的插入
@@ -128,7 +128,6 @@ class Site():
                 + "'%s','%s','%s','%s');"
             self.db.execute(sql % (id,sto.name,sto.url,sto.author,sto.publish,sto.category,labs,sto.savepath,seri))
             self.db.commit()
-            print(f'已归档: {sto.name}')
 
 
     # 获得文章列表
@@ -138,7 +137,6 @@ class Site():
         story_cards=self.spider.find_elements_by_xpath(self.config['card_path'])
         # 提取故事卡片信息
         for card in story_cards:
-            print('Collecting info:', st.name)
             url=card.ele(self.config['story_title']).ele('tag:a').link
             st=Story(
                 name=card.ele(self.config['story_title']).ele('tag:a').text,
@@ -151,6 +149,7 @@ class Site():
             st.content = self.get_article_content(url)
             st.series = self.check_series(st, self.spider.page.eles(self.config['series']))
             self.storys.append(st)
+            print('get article info:', st.name)
 
     # 获取详情页
     def get_article_content(self, url):
