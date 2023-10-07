@@ -90,19 +90,16 @@ class Site():
     # 获取详情页
     def get_article_info(self, story):
         id = threading.current_thread().ident
-        try:
-            self.get(story.url)
-            # 解析文章信息
-            story.author= self.page.ele(CONFIG['article_author']).ele('tag:a').text
-            story.publish= self.page.ele(CONFIG['publish']).text
-            story.category= self.page.ele(CONFIG['category_tags']).text
-            story.labels= self.get_lebals(self.page.ele(CONFIG['label_tags']))
-            story.content= self.get_article_content(CONFIG['article_content'])
-            story.series= self.check_series(story, self.page.eles(CONFIG['article_series']))
-            story.savepath= self.get_filename(story)
-            print(f"{id}#", 'Collected article info. ', story.name)
-        except Exception as e:
-            print('get article info error:', story.name)
+        self.get(story.url)
+        # 解析文章信息
+        story.author= self.page.ele(CONFIG['article_author']).ele('tag:a').text
+        story.publish= self.page.ele(CONFIG['publish']).text
+        story.category= self.page.ele(CONFIG['category_tags']).text
+        story.labels= self.get_lebals(self.page.ele(CONFIG['label_tags']))
+        story.content= self.get_article_content(CONFIG['article_content'])
+        story.series= self.check_series(story, self.page.eles(CONFIG['article_series']))
+        story.savepath= self.get_filename(story)
+        print(f"{id}#", 'Collected article info. ', story.name)
 
     # 检查是否为系列故事
     def check_series(self, story, series):
@@ -223,9 +220,9 @@ class Site():
             wait(max_linex=max_lines)
     
         # 检查任务列表
-        # self.check_list()
-        # if len(self.storys)==0:
-        #     return
+        self.check_list()
+        if len(self.storys)==0:
+            return
 
         # 多线程采集详情页
         thd = []

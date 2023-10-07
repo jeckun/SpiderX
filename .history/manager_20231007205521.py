@@ -8,7 +8,7 @@ if __name__ == '__main__':
     print(f"Start download stories from site.")
 
     # 计划下载页数
-    pages = [1, 2]
+    pages = [11, 20]
     site = Site()
     site.download(pages)
     

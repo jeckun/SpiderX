@@ -223,9 +223,9 @@ class Site():
             wait(max_linex=max_lines)
     
         # 检查任务列表
-        # self.check_list()
-        # if len(self.storys)==0:
-        #     return
+        self.check_list()
+        if len(self.storys)==0:
+            return
 
         # 多线程采集详情页
         thd = []
