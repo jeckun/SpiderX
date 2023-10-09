@@ -49,7 +49,7 @@ def mkdirs(path):
     return
 
 def get_group(x: str, y: str):
-    lw = ['.',' ','！','：','，','？','♡','…','!','@','/','\\','#','$','%','^','&','*','`','\'','\"',',','|']
+    lw = ['.',' ','！','：','，','…','!','@','/','\\','#','$','%','^','&','*','`','\'','\"',',','|']
     if len(x) > len(y):
         a, b = list(x), list(y)
     else:
@@ -112,6 +112,6 @@ def multi_thread(func, split_func, s: int, e:int, max_lines: int):
     for i in range(len(s_e)):
         thd.append(threading.Thread(target=func, args=(s_e[i][0] , s_e[i][1])))
         thd[i].start()
-        time.sleep(5)
+        time.sleep(3)
 
     wait_all()

@@ -9,9 +9,9 @@ if __name__ == '__main__':
     print(f"Start download stories from site.")
 
     # 计划下载页数
-    pages = [81, 100]
+    pages = [1, 2]
     site = Site()
-    multi_thr = False
+    multi_thr = True
     site.download(pages, multi_thr)
     
     print(f"Download completed.")

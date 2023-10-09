@@ -12,13 +12,13 @@ from src.model import SqliteDB
 from src.books import Story
 
 BASE_DIR = os.path.abspath(os.path.curdir)
-DOWNLOADTYPE='S'
+DOWNLOADTYPE='D'
 CONFIG =config('config.ini')
 
 class Site():
     title=''
     host=''
-    tabs=[]
+    lists=[]
     storys=[]
     series=[]
     def __init__(self):
@@ -42,7 +42,7 @@ class Site():
             rst = []
             lst = [Story(a.ele('tag:a').text, a.ele('tag:a').link) for a in eles]
             for item in lst:
-                if item.name not in self.db_list:
+                if item not in self.db_list:
                     rst.append(item)
             return rst
         else:
@@ -60,6 +60,7 @@ class Site():
             if i <= end:
                 self.next()
         print("%d# is stoped." % id)
+    
     
     def get_storys(self, start, end):
         for item in self.storys[start: end]:
@@ -79,6 +80,8 @@ class Site():
         try:
             # 解析文章信息
             self.get(story.url)
+            # print(self.page.url)
+            # print(f"{id}#", 'collecting article info:', story.name)
             story.author= self.page.ele(CONFIG['article_author']).ele('tag:a').text
             story.publish= self.page.ele(CONFIG['publish']).text
             story.category= self.page.ele(CONFIG['category_tags']).text
@@ -87,7 +90,7 @@ class Site():
             story.series= self.get_series_list(story, CONFIG['article_series'])
             story.savepath= self.get_filename(story)
             print(f"{id}#", 'collected article info:', story.name)
-            time.sleep(3)
+            time.sleep(5)
         except Exception as e:
             print('get article info error:', story.name)
 
@@ -95,17 +98,12 @@ class Site():
     def get_series_list(self, story, tag: str):
         series = self.get_list(tag)
         if series:
-            if len(series)>1:
-                for item in series:
-                    ser_name = get_group(series[0].name, item.name)
-            else:
-                ser_name = get_group(series[0].name, story.name)
-            if len(ser_name)==0:
-                ser_name = get_group(series[0].name, series[0].name)
-            return {ser_name: dict([(a.name, a.url) for a in series])} 
+            seri = series[0].name
+            gpname = get_group(story.name, seri)
+            return {gpname: dict([(a.name, a.url) for a in series])} 
         else:
-            ser_name = get_group(story.name, story.name)
-            return {ser_name: {}}
+            gpname = get_group(story.name, story.name)
+            return {gpname: {}}
 
 
     def get_filename(self, story):
@@ -142,15 +140,12 @@ class Site():
         story_list=[n.name for n in self.storys]
         serie_list=[n.name for n in self.series]
 
-        try:
-            seri = list(story.series)[0]
-            if story.series[seri]:
-                for name, url in story.series[seri].items():
-                    if name not in serie_list and name not in story_list and name not in self.db_list:
-                        # 关联文章不存在，需要下载
-                        self.series.append(Story(name=name,url=url))
-        except Exception as e:
-            print('check article series error.', story.name)
+        seri = list(story.series)[0]
+        if story.series[seri]:
+            for name, url in story.series[seri].items():
+                if name not in serie_list and name not in story_list and name not in self.db_list:
+                    # 关联文章不存在，需要下载
+                    self.series.append(Story(name=name,url=url))
 
     # 保存文章
     def save(self, filename, content):

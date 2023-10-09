@@ -49,7 +49,7 @@ def mkdirs(path):
     return
 
 def get_group(x: str, y: str):
-    lw = ['.',' ','！','：','，','？','♡','…','!','@','/','\\','#','$','%','^','&','*','`','\'','\"',',','|']
+    lw = ['.',' ','！','：','，','…','!','@','/','\\','#','$','%','^','&','*','`','\'','\"',',','|']
     if len(x) > len(y):
         a, b = list(x), list(y)
     else:
@@ -68,12 +68,23 @@ def wait(max_linex):
             break
         time.sleep(10)
 
-def wait_all():
-    while True:
-        if len(threading.enumerate()) <= 1 :
-            break
-        time.sleep(10)
+def split_list(obj: list, step: int):
+    x = 0
+    if step==0:
+        return 0, 1
+    for i in range(0,len(obj),step):
+        x += step
+        x = x if len(obj) > x else len(obj)
+        if i < x:
+            yield i, x
 
+
+def get_star_end(s, e, t):
+    for i in range(s,e+1,t):
+        if i+t > e:
+            yield i, e
+        else:
+            yield i, t + i -1
 
 def index(item, list: list):
     try:
@@ -81,37 +92,3 @@ def index(item, list: list):
         return index
     except Exception as e:
         return -1
-
-
-def get_star_end(s: int, e:int, step: int):
-    for i in range(s,e+1,step):
-        if i+step > e:
-            yield i, e
-        else:
-            yield i, i + step -1
-
-
-def split_list(s: int, e:int, step: int):
-    x = 0
-    objs = e - s
-    if step==0:
-        return 0, 1
-    for i in range(0,objs,step):
-        x += step
-        x = x if objs > x else objs
-        if i < x:
-            yield i, x
-
-
-# 多线程处理
-def multi_thread(func, split_func, s: int, e:int, max_lines: int):
-    thd = []
-    s_e = []
-    step=round((e-s+1)/max_lines)
-    s_e += split_func(s, e, step)
-    for i in range(len(s_e)):
-        thd.append(threading.Thread(target=func, args=(s_e[i][0] , s_e[i][1])))
-        thd[i].start()
-        time.sleep(5)
-
-    wait_all()

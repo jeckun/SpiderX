@@ -12,7 +12,7 @@ from src.model import SqliteDB
 from src.books import Story
 
 BASE_DIR = os.path.abspath(os.path.curdir)
-DOWNLOADTYPE='S'
+DOWNLOADTYPE='D'
 CONFIG =config('config.ini')
 
 class Site():
@@ -61,6 +61,7 @@ class Site():
                 self.next()
         print("%d# is stoped." % id)
     
+    
     def get_storys(self, start, end):
         for item in self.storys[start: end]:
             self.get_article_info(item)
@@ -95,17 +96,12 @@ class Site():
     def get_series_list(self, story, tag: str):
         series = self.get_list(tag)
         if series:
-            if len(series)>1:
-                for item in series:
-                    ser_name = get_group(series[0].name, item.name)
-            else:
-                ser_name = get_group(series[0].name, story.name)
-            if len(ser_name)==0:
-                ser_name = get_group(series[0].name, series[0].name)
-            return {ser_name: dict([(a.name, a.url) for a in series])} 
+            seri = series[0].name
+            gpname = get_group(story.name, seri)
+            return {gpname: dict([(a.name, a.url) for a in series])} 
         else:
-            ser_name = get_group(story.name, story.name)
-            return {ser_name: {}}
+            gpname = get_group(story.name, story.name)
+            return {gpname: {}}
 
 
     def get_filename(self, story):
@@ -142,15 +138,12 @@ class Site():
         story_list=[n.name for n in self.storys]
         serie_list=[n.name for n in self.series]
 
-        try:
-            seri = list(story.series)[0]
-            if story.series[seri]:
-                for name, url in story.series[seri].items():
-                    if name not in serie_list and name not in story_list and name not in self.db_list:
-                        # 关联文章不存在，需要下载
-                        self.series.append(Story(name=name,url=url))
-        except Exception as e:
-            print('check article series error.', story.name)
+        seri = list(story.series)[0]
+        if story.series[seri]:
+            for name, url in story.series[seri].items():
+                if name not in serie_list and name not in story_list and name not in self.db_list:
+                    # 关联文章不存在，需要下载
+                    self.series.append(Story(name=name,url=url))
 
     # 保存文章
     def save(self, filename, content):

@@ -12,19 +12,18 @@ from src.model import SqliteDB
 from src.books import Story
 
 BASE_DIR = os.path.abspath(os.path.curdir)
-DOWNLOADTYPE='S'
+DOWNLOADTYPE='D'
 CONFIG =config('config.ini')
 
 class Site():
     title=''
     host=''
-    tabs=[]
+    lists=[]
     storys=[]
     series=[]
     def __init__(self):
         self.title=CONFIG['site_title']
         self.host=CONFIG['host']
-        self.get_db_list()
         self.page=SessionPage() if DOWNLOADTYPE == 'S' else ChromiumPage()
 
     def __str__(self):
@@ -39,14 +38,15 @@ class Site():
     def get_list(self, tag: str):
         eles=self.page.eles(tag)
         if eles:
-            rst = []
-            lst = [Story(a.ele('tag:a').text, a.ele('tag:a').link) for a in eles]
-            for item in lst:
-                if item.name not in self.db_list:
-                    rst.append(item)
-            return rst
+            return [Story(a.ele('tag:a').text, a.ele('tag:a').link) for a in eles]
         else:
             return []
+
+    # def tag_a_list(self, eles):
+    #     for ls in eles:
+    #         ele=ls.ele('tag:a')
+    #         if ele:
+    #             yield (ele.text, ele.link)
 
     # 获取下载列表
     def collect_list(self, start, end):
@@ -54,12 +54,12 @@ class Site():
         print("%d# is running." % id)
         self.get(CONFIG['host']+CONFIG['start_page'] % start)
         for i in range(start, end+1):
-            print("%d# collect list page %d." % (id, i))
             self.storys += self.get_list(CONFIG['article_list'])
-            time.sleep(5)
-            if i <= end:
-                self.next()
+            self.next()
+            print("%d# collect list page %d." % (id, i))
+            time.sleep(10)
         print("%d# is stoped." % id)
+    
     
     def get_storys(self, start, end):
         for item in self.storys[start: end]:
@@ -77,17 +77,18 @@ class Site():
     def get_article_info(self, story):
         id = threading.current_thread().ident
         try:
-            # 解析文章信息
-            self.get(story.url)
-            story.author= self.page.ele(CONFIG['article_author']).ele('tag:a').text
-            story.publish= self.page.ele(CONFIG['publish']).text
-            story.category= self.page.ele(CONFIG['category_tags']).text
-            story.labels= self.get_lebals(self.page.ele(CONFIG['label_tags']))
-            story.content= self.get_article_content(CONFIG['article_content'])
-            story.series= self.get_series_list(story, CONFIG['article_series'])
-            story.savepath= self.get_filename(story)
-            print(f"{id}#", 'collected article info:', story.name)
-            time.sleep(3)
+            if self.get(story.url):
+                # 解析文章信息
+                print(f"{id}#", 'collecting article info:', story.name)
+                story.author= self.page.ele(CONFIG['article_author']).ele('tag:a').text
+                story.publish= self.page.ele(CONFIG['publish']).text
+                story.category= self.page.ele(CONFIG['category_tags']).text
+                story.labels= self.get_lebals(self.page.ele(CONFIG['label_tags']))
+                story.content= self.get_article_content(CONFIG['article_content'])
+                story.series= self.get_series_list(story, CONFIG['article_series'])
+                story.savepath= self.get_filename(story)
+                print(f"{id}#", 'collected article info:', story.name)
+            time.sleep(5)
         except Exception as e:
             print('get article info error:', story.name)
 
@@ -95,17 +96,12 @@ class Site():
     def get_series_list(self, story, tag: str):
         series = self.get_list(tag)
         if series:
-            if len(series)>1:
-                for item in series:
-                    ser_name = get_group(series[0].name, item.name)
-            else:
-                ser_name = get_group(series[0].name, story.name)
-            if len(ser_name)==0:
-                ser_name = get_group(series[0].name, series[0].name)
-            return {ser_name: dict([(a.name, a.url) for a in series])} 
+            seri = series[0].name
+            gpname = get_group(story.name, seri)
+            return {gpname: dict([(a.name, a.url) for a in series])} 
         else:
-            ser_name = get_group(story.name, story.name)
-            return {ser_name: {}}
+            gpname = get_group(story.name, story.name)
+            return {gpname: {}}
 
 
     def get_filename(self, story):
@@ -130,27 +126,22 @@ class Site():
         else:
             return []
 
-    # 获取数据库记录
-    def get_db_list(self):
-        db=SqliteDB(CONFIG['db_name'])
-        rst=db.query_by_sql("select name from story_download_list;")
-        self.db_list=[r[0] for r in rst]
-
     # 检查关联文章
     def get_article_series(self, story):
+
+        db=SqliteDB(CONFIG['db_name'])
+        rst=db.query_by_sql("select name from story_download_list;")
+        db_list=[r[0] for r in rst]
 
         story_list=[n.name for n in self.storys]
         serie_list=[n.name for n in self.series]
 
-        try:
-            seri = list(story.series)[0]
-            if story.series[seri]:
-                for name, url in story.series[seri].items():
-                    if name not in serie_list and name not in story_list and name not in self.db_list:
-                        # 关联文章不存在，需要下载
-                        self.series.append(Story(name=name,url=url))
-        except Exception as e:
-            print('check article series error.', story.name)
+        seri = list(story.series)[0]
+        if story.series[seri]:
+            for name, url in story.series[seri].items():
+                if name not in serie_list and name not in story_list and name not in db_list:
+                    # 关联文章不存在，需要下载
+                    self.series.append(Story(name=name,url=url))
 
     # 保存文章
     def save(self, filename, content):
