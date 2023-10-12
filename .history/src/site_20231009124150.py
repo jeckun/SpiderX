@@ -53,16 +53,13 @@ class Site():
         id = threading.current_thread().ident
         print("%d# is running." % id)
         self.get(CONFIG['host']+CONFIG['start_page'] % start)
-        try:
-            for i in range(start, end+1):
-                print("%d# collect list page %d." % (id, i))
-                self.storys += self.get_list(CONFIG['article_list'])
-                time.sleep(5)
-                if i < end:
-                    self.next()
-            print("%d# is stoped." % id)
-        except Exception as e:
-            print("collect list error.")
+        for i in range(start, end+1):
+            print("%d# collect list page %d." % (id, i))
+            self.storys += self.get_list(CONFIG['article_list'])
+            time.sleep(5)
+            if i <= end:
+                self.next()
+        print("%d# is stoped." % id)
     
     def get_storys(self, start, end):
         for item in self.storys[start: end]:
@@ -89,7 +86,6 @@ class Site():
             story.content= self.get_article_content(CONFIG['article_content'])
             story.series= self.get_series_list(story, CONFIG['article_series'])
             story.savepath= self.get_filename(story)
-            story.download=True
             print(f"{id}#", 'collected article info:', story.name)
             time.sleep(3)
         except Exception as e:
@@ -98,10 +94,7 @@ class Site():
     # 判断是否为系列故事
     def get_series_list(self, story, tag: str):
         series = self.get_list(tag)
-        story.name = story.name.replace('?','').replace('/','').replace('@','').replace('&','').replace('%','')
         if series:
-            for item in series:
-                item.name = item.name.replace('?','').replace('/','').replace('@','').replace('&','').replace('%','')
             if len(series)>1:
                 for item in series:
                     ser_name = get_group(series[0].name, item.name)
@@ -117,6 +110,7 @@ class Site():
 
     def get_filename(self, story):
         filename=''
+        story.name=story.name.replace('?','').replace('/','').replace('@','').replace('&','').replace('%','')
         if story.series and list(story.series)[0]:
             filename=os.path.join(BASE_DIR,CONFIG['save_path'],list(story.series)[0],story.name+'.txt')
         else:
@@ -193,11 +187,9 @@ class Site():
         # 插入数据
         print('Start save to db.')
         for story in self.storys:
-            if not story.download:
-                continue
+            id = ''.join([str(i) for i in random.sample(range(100, 900), 6)])
             labs = ','.join(story.labels) if story.labels else ''
             seri = list(story.series)[0] if story.series else ''
-            id = ''.join([str(i) for i in random.sample(range(100, 900), 6)])
 
             # 插入前检查是否已有记录，有的跳过
             if db.query_by_filter('story_download_list',f'name="{story.name}"'):

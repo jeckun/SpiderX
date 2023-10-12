@@ -53,16 +53,13 @@ class Site():
         id = threading.current_thread().ident
         print("%d# is running." % id)
         self.get(CONFIG['host']+CONFIG['start_page'] % start)
-        try:
-            for i in range(start, end+1):
-                print("%d# collect list page %d." % (id, i))
-                self.storys += self.get_list(CONFIG['article_list'])
-                time.sleep(5)
-                if i < end:
-                    self.next()
-            print("%d# is stoped." % id)
-        except Exception as e:
-            print("collect list error.")
+        for i in range(start, end+1):
+            print("%d# collect list page %d." % (id, i))
+            self.storys += self.get_list(CONFIG['article_list'])
+            time.sleep(5)
+            if i <= end:
+                self.next()
+        print("%d# is stoped." % id)
     
     def get_storys(self, start, end):
         for item in self.storys[start: end]:
@@ -98,10 +95,7 @@ class Site():
     # 判断是否为系列故事
     def get_series_list(self, story, tag: str):
         series = self.get_list(tag)
-        story.name = story.name.replace('?','').replace('/','').replace('@','').replace('&','').replace('%','')
         if series:
-            for item in series:
-                item.name = item.name.replace('?','').replace('/','').replace('@','').replace('&','').replace('%','')
             if len(series)>1:
                 for item in series:
                     ser_name = get_group(series[0].name, item.name)
@@ -109,14 +103,15 @@ class Site():
                 ser_name = get_group(series[0].name, story.name)
             if len(ser_name)==0:
                 ser_name = get_group(series[0].name, series[0].name)
-            return {ser_name: dict([(a.name, a.url) for a in series])} 
+            return {ser_name: dict([(a.name.replace('?','').replace('/','').replace('@','').replace('&','').replace('%',''), a.url) for a in series])} 
         else:
-            ser_name = get_group(story.name, story.name)
+            ser_name = get_group(story.name.replace('?','').replace('/','').replace('@','').replace('&','').replace('%',''), story.name)
             return {ser_name: {}}
 
 
     def get_filename(self, story):
         filename=''
+        story.name=story.name.replace('?','').replace('/','').replace('@','').replace('&','').replace('%','')
         if story.series and list(story.series)[0]:
             filename=os.path.join(BASE_DIR,CONFIG['save_path'],list(story.series)[0],story.name+'.txt')
         else:

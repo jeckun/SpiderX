@@ -53,16 +53,13 @@ class Site():
         id = threading.current_thread().ident
         print("%d# is running." % id)
         self.get(CONFIG['host']+CONFIG['start_page'] % start)
-        try:
-            for i in range(start, end+1):
-                print("%d# collect list page %d." % (id, i))
-                self.storys += self.get_list(CONFIG['article_list'])
-                time.sleep(5)
-                if i < end:
-                    self.next()
-            print("%d# is stoped." % id)
-        except Exception as e:
-            print("collect list error.")
+        for i in range(start, end+1):
+            print("%d# collect list page %d." % (id, i))
+            self.storys += self.get_list(CONFIG['article_list'])
+            time.sleep(5)
+            if i <= end:
+                self.next()
+        print("%d# is stoped." % id)
     
     def get_storys(self, start, end):
         for item in self.storys[start: end]:
